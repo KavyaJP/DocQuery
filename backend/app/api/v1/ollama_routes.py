@@ -14,7 +14,7 @@ async def stream_ollama_pull(model_name: str):
     async with httpx.AsyncClient(timeout=None) as client:
         async with client.stream(
             "POST",
-            "http://127.0.0.1:11434/api/pull",
+            "http://localhost:11434/api/pull",
             json={"name": model_name, "stream": True},
         ) as response:
             async for chunk in response.aiter_lines():
