@@ -1,5 +1,26 @@
-from fastapi import APIRouter
 import httpx
+import json
+
+from fastapi import APIRouter
+from pydantic import BaseModel
+from fastapi.responses import StreamingResponse
+
+
+class PullModelRequest(BaseModel):
+    name: str
+
+
+async def stream_ollama_pull(model_name: str):
+    async with httpx.AsyncClient(timeout=None) as client:
+        async with client.stream(
+            "POST",
+            "http://127.0.0.1:11434/api/pull",
+            json={"name": model_name, "stream": True},
+        ) as response:
+            async for chunk in response.aiter_lines():
+                if chunk:
+                    yield f"{chunk}\n\n"
+
 
 router = APIRouter()
 
@@ -15,12 +36,20 @@ async def local_models():
 @router.get("/recommended_models")
 def recommended_models():
     return {
-        "no_vram": "qwen2.5:3b",
-        "4gb_vram": "gemma3:4b",
-        "6gb_vram": "qwen2.5:7b",
-        "8gb_vram": "qwen2.5:7b",
-        "12gb_vram": "gemma3:12b",
-        "16gb_vram": "deepseek-r1:14b",
-        "24gb_vram": "qwen2.5:32b",
-        "48gb_plus_vram": "llama3.3:70b",
+        "no_vram": "qwen3.5:2b",
+        "4gb_vram": "qwen3.5:4b",
+        "6gb_vram": "qwen3.5:4b",
+        "8gb_vram": "qwen3.5:9b",
+        "12gb_vram": "qwen3.5:9b",
+        "16gb_vram": "qwen3.5:9b",
+        "24gb_vram": "qwen3.6:27b",
+        "48gb_vram": "qwen3.5:35b",
+        "72gb_plus_vram": "qwen3.5:122b",
     }
+
+
+@router.post("/pull")
+async def pull_model(request: PullModelRequest):
+    return StreamingResponse(
+        stream_ollama_pull(request.name), media_type="text/event-stream"
+    )
