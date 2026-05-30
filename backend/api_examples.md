@@ -11,3 +11,9 @@
   ```bash
   curl -X POST "http://localhost:8000/api/v1/models/pull" -H "Content-Type: application/json" -d '{"name":"qwen2.5:0.5b"}'
   ```
+
+2. Extract Text from document:
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/documents/upload" -F "file=@E:\Programs\AI-Document-Automation\test_pdf.pdf"
+```

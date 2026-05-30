@@ -7,9 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from contextlib import asynccontextmanager
 
+# importing API routes
 from app.api.v1 import ollama_routes
+from app.api.v1 import document_routes
 
 
+# Start ollama when starting the application
 async def check_if_ollama_running() -> bool:
     async with httpx.AsyncClient() as client:
         try:
@@ -48,8 +51,9 @@ app.add_middleware(
 )
 
 app.include_router(ollama_routes.router, prefix="/api/v1/models")
+app.include_router(document_routes.router, prefix="/api/v1/documents")
 
 
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "API is working"}
+    return {"status": "ok", "message": "Smart Document Workflow API is working"}

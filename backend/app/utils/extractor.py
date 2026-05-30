@@ -4,10 +4,12 @@ from pypdf import PdfReader
 from PIL import Image
 import pytesseract
 
-pytesseract.pytesseract.tesseract_cmd = r"E:\tesseract-ocr\tesseract.exe"
+from app.config import TESSERACT_PATH
+
+pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 
 
-async def extract_information(file_content: bytes, file_name: str):
+async def extract_text(file_content: bytes, file_name: str):
     if file_name.lower().endswith(".pdf"):
         pdf_stream = io.BytesIO(file_content)
         reader = PdfReader(pdf_stream)
