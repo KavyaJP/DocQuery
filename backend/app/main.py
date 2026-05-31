@@ -11,6 +11,8 @@ from contextlib import asynccontextmanager
 from app.api.v1 import ollama_routes
 from app.api.v1 import document_routes
 
+from app.config import DB_PATH
+
 
 # Start ollama when starting the application
 async def check_if_ollama_running() -> bool:
@@ -32,6 +34,8 @@ async def lifespan_function(app: FastAPI):
         await asyncio.sleep(2)
 
         print("\n\nStarted Ollama\n\n")
+
+    print(DB_PATH)
 
     yield
 
