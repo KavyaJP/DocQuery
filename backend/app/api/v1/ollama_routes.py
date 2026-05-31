@@ -1,12 +1,11 @@
 import httpx
-import json
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
 
 
-class PullModelRequest(BaseModel):
+class ModelRequest(BaseModel):
     name: str
 
 
@@ -49,7 +48,33 @@ def recommended_models():
 
 
 @router.post("/pull")
-async def pull_model(request: PullModelRequest):
+async def pull_model(request: ModelRequest):
     return StreamingResponse(
         stream_ollama_pull(request.name), media_type="text/event-stream"
     )
+
+
+@router.post("/remove")
+async def remove_model(request: ModelRequest):
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.request(
+                "DELETE",
+                "http://localhost:11434/api/delete",
+                json={"model": request.name},
+            )
+            response.raise_for_status()
+            return {
+                "Status": 200,
+                "Message": f"Model {request.name} deleted successfully",
+            }
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(
+                status_code=e.response.status_code,
+                detail=f"Ollama error: {e.response.text}",
+            )
+        except httpx.RequestError as e:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Couldn't connect to server. {str(e)}",
+            )

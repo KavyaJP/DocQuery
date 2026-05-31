@@ -1,6 +1,10 @@
-After Starting the application, you can visit [http://localhost:8000/docs#/](http://localhost:8000/docs#/) to view full documentation of every API
+After starting the application, visit `http://localhost:8000/docs#/` to access the complete API documentation and explore all available endpoints.
 
-1. Pull Model from ollama:
+## Ollama APIs
+
+### 1. Pull a Model
+
+Download an Ollama model for local inference.
 
 - **Windows:**
 
@@ -16,7 +20,27 @@ After Starting the application, you can visit [http://localhost:8000/docs#/](htt
 
 **Returns:** A stream of `{"status":"pulling c5396e06af29","digest":"sha256:c5396e06af294bd101b30dce59131a76d2b773e76950acc870eda801d3ab0515","total":397807936,"completed":80949}`
 
-2. Extract Text from document and store it into ChromaDB:
+### 2. Remove a Model
+
+Remove a previously downloaded Ollama model.
+
+- **Windows:**
+
+  ```cmd
+  curl -X POST "http://localhost:8000/api/v1/models/remove" -H "Content-Type: application/json" -d "{\"name\":\"qwen2.5:0.5b\"}"
+  ```
+
+- **Linux & MacOS:**
+
+  ```bash
+  curl -X POST "http://localhost:8000/api/v1/models/remove" -H "Content-Type: application/json" -d '{"name":"qwen2.5:0.5b"}'
+  ```
+
+**Returns:** `{"Status":200,"Message":"Model qwen2.5:0.5b deleted successfully"}`
+
+## Text Extraction & Vectorisation API
+
+Upload a document to extract text and store embeddings in ChromaDB.
 
 ```bash
 curl -X POST "http://localhost:8000/api/v1/documents/upload" -F "file=@E:\Programs\AI-Document-Automation\test_documents\test_pdf.pdf"
@@ -24,7 +48,9 @@ curl -X POST "http://localhost:8000/api/v1/documents/upload" -F "file=@E:\Progra
 
 **Returns:** `{"filename":"test_pdf.pdf","message":"Successfully added 1 chunk(s) into chroma database"}`
 
-3. Ask the question to Ollama downloaded LLM:
+## Query API
+
+Submit a question and receive an LLM-generated answer using retrieved document context.
 
 - **Windows:**
 
