@@ -32,7 +32,7 @@ class LocalModel {
   }
 }
 
-class BackendService {
+class ModelsService {
   final Dio _dio = Dio();
 
   Future<List<LocalModel>> fetchLocalModels() async {

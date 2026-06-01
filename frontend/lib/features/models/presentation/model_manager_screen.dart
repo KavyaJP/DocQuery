@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:doc_query/features/models/data/backend_service.dart';
+import 'package:doc_query/features/models/data/models_service.dart';
 
 class ModelManagerScreen extends StatefulWidget {
   const ModelManagerScreen({super.key});
@@ -10,7 +10,7 @@ class ModelManagerScreen extends StatefulWidget {
 }
 
 class _ModelManagerScreenState extends State<ModelManagerScreen> {
-  final BackendService _apiService = BackendService();
+  final ModelsService _apiService = ModelsService();
 
   List<LocalModel> _installedModels = [];
   Map<String, dynamic> _recommendations = {};
@@ -228,8 +228,7 @@ class _ModelManagerScreenState extends State<ModelManagerScreen> {
                                           _customModelController.text.trim();
                                       if (textInput.isNotEmpty) {
                                         _downloadModel(textInput);
-                                        _customModelController
-                                            .clear();
+                                        _customModelController.clear();
                                       }
                                     },
                             ),
@@ -315,8 +314,7 @@ class _ModelManagerScreenState extends State<ModelManagerScreen> {
                                             tooltip:
                                                 'Cancel this network process',
                                             onPressed: _cancelDownload,
-                                            constraints:
-                                                const BoxConstraints(),
+                                            constraints: const BoxConstraints(),
                                             padding: EdgeInsets.zero,
                                           ),
                                         ],
