@@ -1,7 +1,7 @@
 class ApiConfig {
-  static const String _rootUrl = 'http://localhost:8000';
+  static const String rootUrl = 'http://localhost:8000';
 
-  static const String baseUrl = '$_rootUrl/api';
+  static const String baseUrl = '$rootUrl/api';
 
   static const _ollamaAPIPrefix = 'v1/models';
   static const _documentAPIPrefix = 'v1/documents';
